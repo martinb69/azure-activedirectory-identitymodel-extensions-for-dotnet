@@ -13,6 +13,15 @@ namespace Microsoft.IdentityModel.Protocols.OpenIdConnect.Tests
     /// </summary>
     public class OpenIdConnectSerializationTests
     {
+        [Fact]
+        public void OpenIdConnectConfiguration_FromJson_Should_Work()
+        {
+            var json = @"{""issuer"": ""http://localhost"",""jwks_uri"": ""http://localhost""}";
+            var config = OpenIdConnectConfiguration.Create(json);
+            Assert.True(config.Issuer == "http://localhost");
+            Assert.True(config.JwksUri == "http://localhost");
+        }
+
         [Theory, MemberData(nameof(DesrializeTheoryData), DisableDiscoveryEnumeration = true)]
         public void Deserialize(OpenIdConnectTheoryData theoryData)
         {
