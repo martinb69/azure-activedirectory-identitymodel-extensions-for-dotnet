@@ -636,6 +636,13 @@ namespace Microsoft.IdentityModel.JsonWebTokens.Tests
                 string[] stringArray = new string[] { "string1", "string2" };
                 object propertyValue = new Dictionary<string, string[]> { { "stringArray", stringArray } };
 
+                theoryData.Add(new GetPayloadValueTheoryData("at")
+                {
+                    PropertyName = "at",
+                    PropertyType = typeof(string),
+                    PropertyValue = JsonUtilities.CreateUnsignedToken("sub", "subject"),
+                    Json = JsonUtilities.CreateUnsignedToken("at", JsonUtilities.CreateUnsignedToken("sub", "subject"))
+                });
                 theoryData.Add(new GetPayloadValueTheoryData("SubjectAsString")
                 {
                     PropertyName = "sub",

@@ -170,6 +170,7 @@ namespace Microsoft.IdentityModel.JsonWebTokens
         public static ReadOnlySpan<byte> AtHash => "at_hash"u8;
         public static ReadOnlySpan<byte> Aud => "aud"u8;
         public static ReadOnlySpan<byte> AuthTime => "auth_time"u8;
+        public static ReadOnlySpan<byte> At => "at"u8;
         public static ReadOnlySpan<byte> Azp => "azp"u8;
         public static ReadOnlySpan<byte> Birthdate => "birthdate"u8;
         public static ReadOnlySpan<byte> CHash => "c_hash"u8;

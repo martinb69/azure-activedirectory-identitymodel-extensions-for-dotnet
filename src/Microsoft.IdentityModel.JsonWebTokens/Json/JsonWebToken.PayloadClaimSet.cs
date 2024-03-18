@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -37,7 +38,25 @@ namespace Microsoft.IdentityModel.JsonWebTokens
             {
                 if (reader.TokenType == JsonTokenType.PropertyName)
                 {
-                    if (reader.ValueTextEquals(JwtPayloadUtf8Bytes.Aud))
+                    if (reader.ValueTextEquals(JwtPayloadUtf8Bytes.At))
+                    {
+                        long startToken = reader.BytesConsumed + 1;
+
+                        reader.Skip();
+
+                        long endToken = reader.BytesConsumed;
+#if NET6_0_OR_GREATER
+                        string base64UrlEncodedJson = Encoding.UTF8.GetString(byteSpan.Slice((int)startToken, (int)(endToken - startToken - 1)));
+
+                        JsonWebToken token = new JsonWebToken(base64UrlEncodedJson);
+
+                        claims["at"] = token;
+
+                        reader.Read();
+#endif
+                    }
+
+                    else if (reader.ValueTextEquals(JwtPayloadUtf8Bytes.Aud))
                     {
                         _audiences = [];
                         reader.Read();
