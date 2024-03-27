@@ -54,6 +54,8 @@ namespace Microsoft.IdentityModel.JsonWebTokens
         /// </summary>
         protected internal virtual void ReadPayloadValue(Utf8JsonReader reader, Dictionary<string, object> claims)
         {
+            _ = claims ?? throw new ArgumentNullException(nameof(claims));
+
                     if (reader.ValueTextEquals(JwtPayloadUtf8Bytes.Aud))
                     {
                         _audiences = [];
