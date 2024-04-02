@@ -13,7 +13,7 @@ namespace System.IdentityModel.Tokens.Jwt
     /// <summary>
     /// A <see cref="SecurityToken"/> designed for representing a JSON Web Token (JWT).
     /// </summary>
-    public class JwtSecurityToken : SecurityToken
+    public class JwtSecurityToken : JwtToken
     {
         private JwtPayload _payload;
 
@@ -471,6 +471,77 @@ namespace System.IdentityModel.Tokens.Jwt
                 return Header.SerializeToJson() + "." + Payload.SerializeToJson();
             else
                 return Header.SerializeToJson() + ".";
+        }
+
+        /// <summary>
+        /// Tries to get the value corresponding to the provided key from the JWT header { key, 'value' }.
+        /// </summary>
+        /// <remarks>
+        /// The expectation is that the 'value' corresponds to a type expected in a JWT token.
+        /// The 5 basic types: number, string, true / false, nil, array (of basic types).
+        /// This is not a general purpose translation layer for complex types.
+        /// </remarks>
+        /// <returns>true if successful, false otherwise.</returns>
+        public override bool TryGetHeaderValue<T>(string key, out T value)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                value = default;
+                return false;
+            }
+
+            JwtHeader header = InnerToken == null ? Header : InnerToken.Header;
+
+
+            if (!header.TryGetValue(key, out object obj))
+            {
+                value = default;
+                return false;
+            }
+
+            if (obj is T)
+            {
+                value = (T)obj;
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Try to get the 'value' corresponding to key from the JWT payload transformed as type 'T'.
+        /// </summary>
+        /// <remarks>
+        /// The expectation is that the 'value' corresponds to a type are expected in a JWT token.
+        /// The 5 basic types: number, string, true / false, nil, array (of basic types).
+        /// This is not a general purpose translation layer for complex types.
+        /// </remarks>
+        /// <returns>true if successful, false otherwise.</returns>
+        public override bool TryGetPayloadValue<T>(string key, out T value)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                value = default;
+                return false;
+            }
+
+            JwtPayload payload = InnerToken == null ? Payload : InnerToken.Payload;
+
+            if (!payload.TryGetValue(key, out object obj))
+            {
+                value = default;
+                return false;
+            }
+
+            if (obj is T)
+            {
+                value = (T)obj;
+                return true;
+            }
+
+            value = default;
+            return false;
         }
 
         /// <inheritdoc/>

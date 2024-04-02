@@ -711,7 +711,7 @@ namespace Microsoft.IdentityModel.Protocols.OpenIdConnect.Tests
                     JwtSecurityToken = CreateValidatedIdToken(JwtRegisteredClaimNames.Acr, Default.Acr),
                     ProtocolValidator = new PublicOpenIdConnectProtocolValidator
                     {
-                        IdTokenValidator = ((jwtToken, context) =>
+                       IdTokenValidator = ((jwtToken, context) =>
                        {
                            var jwtSecurityToken = jwtToken;
                            if (jwtSecurityToken.Payload.Acr != "acr")

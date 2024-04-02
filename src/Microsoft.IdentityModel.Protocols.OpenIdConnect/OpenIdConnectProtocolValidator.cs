@@ -511,8 +511,7 @@ namespace Microsoft.IdentityModel.Protocols.OpenIdConnect
                 return;
             }
 
-            object cHashClaim;
-            if (!validationContext.ValidatedIdToken.Payload.TryGetValue(JwtRegisteredClaimNames.CHash, out cHashClaim))
+            if (!validationContext.ValidatedIdToken.TryGetPayloadValue(JwtRegisteredClaimNames.CHash, out object cHashClaim))
             {
                 throw LogHelper.LogExceptionMessage(new OpenIdConnectProtocolInvalidCHashException(LogHelper.FormatInvariant(LogMessages.IDX21307, validationContext.ValidatedIdToken)));
             }
@@ -523,10 +522,7 @@ namespace Microsoft.IdentityModel.Protocols.OpenIdConnect
                 throw LogHelper.LogExceptionMessage(new OpenIdConnectProtocolInvalidCHashException(LogHelper.FormatInvariant(LogMessages.IDX21306, validationContext.ValidatedIdToken)));
             }
 
-            var idToken = validationContext.ValidatedIdToken;
-
-            var alg = idToken.InnerToken != null ? idToken.InnerToken.Header.Alg : idToken.Header.Alg;
-
+            validationContext.ValidatedIdToken.TryGetHeaderValue(JwtHeaderParameterNames.Alg, out string alg);
             try
             {
                 ValidateHash(chash, validationContext.ProtocolMessage.Code, alg);
@@ -565,18 +561,15 @@ namespace Microsoft.IdentityModel.Protocols.OpenIdConnect
                 return;
             }
 
-            object atHashClaim;
-            if (!validationContext.ValidatedIdToken.Payload.TryGetValue(JwtRegisteredClaimNames.AtHash, out atHashClaim))
+
+            if (!validationContext.ValidatedIdToken.TryGetPayloadValue(JwtRegisteredClaimNames.AtHash, out object atHashClaim))
                 throw LogHelper.LogExceptionMessage(new OpenIdConnectProtocolInvalidAtHashException(LogHelper.FormatInvariant(LogMessages.IDX21312, validationContext.ValidatedIdToken)));
 
             var atHash = atHashClaim as string;
             if (atHash == null)
                 throw LogHelper.LogExceptionMessage(new OpenIdConnectProtocolInvalidAtHashException(LogHelper.FormatInvariant(LogMessages.IDX21311, validationContext.ValidatedIdToken)));
 
-            var idToken = validationContext.ValidatedIdToken;
-
-            var alg = idToken.InnerToken != null ? idToken.InnerToken.Header.Alg : idToken.Header.Alg;
-
+            validationContext.ValidatedIdToken.TryGetHeaderValue(JwtHeaderParameterNames.Alg, out string alg);
             try
             {
                 ValidateHash(atHash, validationContext.ProtocolMessage.AccessToken, alg);

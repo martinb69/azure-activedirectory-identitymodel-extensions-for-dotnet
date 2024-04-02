@@ -15,7 +15,7 @@ namespace Microsoft.IdentityModel.JsonWebTokens
     /// <summary>
     /// A <see cref="SecurityToken"/> designed for representing a JSON Web Token (JWT). 
     /// </summary>
-    public partial class JsonWebToken : SecurityToken
+    public partial class JsonWebToken : JwtToken
     {
         internal const string ClassName = "Microsoft.IdentityModel.JsonWebTokens.JsonWebToken";
 
@@ -766,7 +766,7 @@ namespace Microsoft.IdentityModel.JsonWebTokens
         /// This is not a general purpose translation layer for complex types.
         /// </remarks>
         /// <returns>true if successful, false otherwise.</returns>
-        public bool TryGetHeaderValue<T>(string key, out T value)
+        public override bool TryGetHeaderValue<T>(string key, out T value)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -786,7 +786,7 @@ namespace Microsoft.IdentityModel.JsonWebTokens
         /// This is not a general purpose translation layer for complex types.
         /// </remarks>
         /// <returns>true if successful, false otherwise.</returns>
-        public bool TryGetPayloadValue<T>(string key, out T value)
+        public override bool TryGetPayloadValue<T>(string key, out T value)
         {
             if (string.IsNullOrEmpty(key))
             {
